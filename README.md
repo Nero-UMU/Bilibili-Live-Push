@@ -12,6 +12,7 @@
 tmux new -s streamVideo
 ```
 
+运行如下命令，按提示输入所需信息
 ```
 bash <(wget -qO- -o- https://raw.githubusercontent.com/Nero-UMU/Bilibili-Live-Push/main/script.sh) 
 ```
