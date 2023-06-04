@@ -4,9 +4,22 @@
 可以选择需要的推动模式后添加描述性的文字，比如版权信息或者门户网站什么的
 
 # 使用方法
+默认已经安装好了ffmpeg和tmux
+
+## 开始推流
+使用tmux创建一个窗口，名字为streamVideo
+```
+tmux new -s streamVideo
+```
+
 ```
 bash <(wget -qO- -o- https://raw.githubusercontent.com/Nero-UMU/Bilibili-Live-Push/main/script.sh) 
 ```
+
+设置好推流后使用 ``Ctrl+b``， ``d`` 快捷键使tmux后台运行
+
+## 结束推流
+再次运行脚本，选择结束推流即可
 
 # 只支持如下三种模式
 - mp3音频+一张jpg图片组合成视频推送
