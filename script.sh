@@ -44,14 +44,14 @@ stream_mp3_one_jpg() { # mp3音频+一张jpg资源类型
         while true; do
             cd $mp3_path
             music=$(find ./ -name "*.mp3" | shuf -n 1)
-            ffmpeg -re -loop 1 -i $jpg_path -i $music -vf drawtext=fontcolor=$color:fontsize=$px:fontfile=$ttf:text="$text":x=$x:y=$y -preset ultrafast -c:v libx264 -g 60 -b:v 3000k -c:a aac -b:a 128k -strict -2 -f flv $rtmp
+            ffmpeg -re -loop 1 -i $jpg_path -i $music -shortest -vf drawtext=fontcolor=$color:fontsize=$px:fontfile=$ttf:text="$text":x=$x:y=$y -preset ultrafast -c:v libx264 -g 60 -b:v 3000k -c:a aac -b:a 128k -strict -2 -crf 30 -f flv $rtmp
         done
 
     else
         while true; do
             cd $mp3_path
             music=$(find ./ -name "*.mp3" | shuf -n 1)
-            ffmpeg -re -loop 1 -i $jpg_path -i $music -preset ultrafast -c:v libx264 -g 60 -b:v 3000k -c:a aac -b:a 128k -strict -2 -f flv $rtmp
+            ffmpeg -re -loop 1 -i $jpg_path -i $music -shortest -preset ultrafast -c:v libx264 -g 60 -b:v 3000k -c:a aac -b:a 128k -strict -2 -crf 30 -f flv $rtmp
         done
 
     fi
@@ -85,7 +85,7 @@ stream_mp3_multi_jpg() { #mp3音频+多张jpg图片
             music=$(find ./ -name "*.mp3" | shuf -n 1)
             jpg_name=$(echo $music | sed 's/mp3/jpg/g')
             image_path=$jpg_path"/"$jpg_name
-            ffmpeg -re -loop 1 -i $image_path -i $music -vf drawtext=fontcolor=$color:fontsize=$px:fontfile=$ttf:text="$text":x=$x:y=$y -preset ultrafast -c:v libx264 -g 60 -b:v 3000k -c:a aac -b:a 128k -strict -2 -f flv $rtmp
+            ffmpeg -re -loop 1 -i $image_path -i $music -shortest -vf drawtext=fontcolor=$color:fontsize=$px:fontfile=$ttf:text="$text":x=$x:y=$y -preset ultrafast -c:v libx264 -g 60 -b:v 3000k -c:a aac -b:a 128k -strict -2 -crf 30 -f flv $rtmp
         done
 
     else
@@ -94,7 +94,7 @@ stream_mp3_multi_jpg() { #mp3音频+多张jpg图片
             music=$(find ./ -name "*.mp3" | shuf -n 1)
             jpg_name=$(echo $music | sed 's/mp3/jpg/g')
             image_path=$jpg_path"/"$jpg_name
-            ffmpeg -re -loop 1 -i $image_path -i $music -preset ultrafast -c:v libx264 -g 60 -b:v 3000k -c:a aac -b:a 128k -strict -2 -f flv $rtmp
+            ffmpeg -re -loop 1 -i $image_path -i $music -shortest -preset ultrafast -c:v libx264 -g 60 -b:v 3000k -c:a aac -b:a 128k -strict -2 -crf 30 -f flv $rtmp
 
         done
 
@@ -128,7 +128,7 @@ stream_mp4() { #mp4视频资源
         while true; do
             cd $mp4_path
             music=$(find ./ -name "*.mp4" | shuf -n 1)
-            ffmpeg -re -i $music -vf drawtext=fontcolor=$color:fontsize=$px:fontfile=$ttf:text="$text":x=$x:y=$y -preset ultrafast -c:v libx264 -g 60 -b:v 3000k -c:a aac -b:a 128k -strict -2 -f flv $rtmp
+            ffmpeg -re -i $music -shortest -vf drawtext=fontcolor=$color:fontsize=$px:fontfile=$ttf:text="$text":x=$x:y=$y -preset ultrafast -c:v libx264 -g 60 -b:v 3000k -c:a aac -b:a 128k -strict -2 -crf 30 -f flv $rtmp
 
         done
 
@@ -136,7 +136,7 @@ stream_mp4() { #mp4视频资源
         while true; do
             cd $mp4_path
             music=$(find ./ -name "*.mp4" | shuf -n 1)
-            ffmpeg -re -i $music -preset ultrafast -c:v libx264 -g 60 -b:v 3000k -c:a aac -b:a 128k -strict -2 -f flv $rtmp
+            ffmpeg -re -i $music -shortest -preset ultrafast -c:v libx264 -g 60 -b:v 3000k -c:a aac -b:a 128k -strict -2 -crf 30 -f flv $rtmp
         done
     fi
 }
