@@ -141,6 +141,57 @@ stream_mp4() { #mp4视频资源
     fi
 }
 
+stream_anime() {
+    read -p "请输入番剧目录的绝对路径:" anime_path
+    read -p "是否需要添加说明的文字(yes/no):" wantText
+    if [ $wantText = "yes" ]; then
+        read -p "请输入使用的字体(绝对路径):" ttf
+        read -p "请输入需要添加的说明文字:" text
+        read -p "文字大小(默认10):" px
+        read -p "文字颜色(默认white):" color
+        read -p "请输入x坐标,相对于左上角(默认0):" x
+        read -p "请输入y坐标,相对于左上角(默认0):" y
+        if [ -z "${px}" ]; then
+            px=10
+        fi
+        if [ -z "${color}" ]; then
+            color="white"
+        fi
+        if [ -z "${x}" ]; then
+            x=0
+        fi
+        if [ -z "${y}" ]; then
+            y=0
+        fi
+    fi
+    read -p "是否添加字幕,字幕文件需和番剧文件在同一个目录下(yes/no):" sub
+    if [ $sub='yes' ]; then
+        while true; do
+            cd $anime_path
+            for video in $(ls *.mkv || ls *.mp4); do
+                name=$(echo $video | sed -e 's/.mkv//g' -e 's/.mp4//g' -e 's/\[/\\\[/g' -e 's/\]/\\\]/g')
+                sub_name=$name".ass"
+                if [ $wantText = "yes" ]; then
+                    ffmpeg -re -i $video -shortest -vf subtitles=$sub_name,drawtext=fontcolor=$color:fontsize=$px:fontfile=$ttf:text="$text":x=$x:y=$y -preset ultrafast -c:v libx264 -g 60 -b:v 1000k -c:a aac -b:a 128k -strict -2 -crf 30 -f flv $rtmp
+                else
+                    ffmpeg -re -i $video -shortest -vf subtitles=$sub_name -preset ultrafast -c:v libx264 -g 60 -b:v 3000k -c:a aac -b:a 128k -strict -2 -crf 30 -f flv $rtmp
+                fi
+            done
+        done
+    else
+        while true; do
+            cd $anime_path
+            for video in $(ls *.mkv || ls *.mp4); do
+                if [ $wantText = "yes" ]; then
+                    ffmpeg -re -i $video -vf drawtext=fontcolor=$color:fontsize=$px:fontfile=$ttf:text="$text":x=$x:y=$y -shortest -preset ultrafast -c:v libx264 -g 60 -b:v 3000k -c:a aac -b:a 128k -strict -2 -crf 30 -f flv $rtmp
+                else
+                    ffmpeg -re -i $video -shortest -preset ultrafast -c:v libx264 -g 60 -b:v 3000k -c:a aac -b:a 128k -strict -2 -crf 30 -f flv $rtmp
+                fi
+            done
+        done
+    fi
+}
+
 set_rtmp() { #设置rtmp信息
     while true; do
         read -p "输入服务器地址+串流密钥,(格式 rtmp://XXX/?streamname=XXX):" rtmp
@@ -163,6 +214,7 @@ start_stream() { #开始推流
     echo "1---mp3音频+一张jpg图片"
     echo "2---mp3音频+多张jpg图片(图片名称需和音频名称相同,如1.mp3和1.jpg)"
     echo "3---mp4视频"
+    echo "4---番剧"
     read -p "请选择推流的资源类型:" choose
 
     case "${choose}" in
@@ -177,6 +229,10 @@ start_stream() { #开始推流
     3)
         set_rtmp
         stream_mp4
+        ;;
+    4)
+        set_rtmp
+        stream_anime
         ;;
     *)
         echo -e "\033[42;37m错误的选项!\033[0m"
