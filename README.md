@@ -22,10 +22,11 @@ bash <(wget -qO- -o- https://raw.githubusercontent.com/Nero-UMU/Bilibili-Live-Pu
 ## 结束推流
 再次运行脚本，选择结束推流即可
 
-# 只支持如下三种模式
+# 支持如下四种模式
 - mp3音频+一张jpg图片组合成视频推送
 - mp3音频+对应的jpg图片组合成视频推送
 - mp4视频推流
+- 番剧(mkv+ass)
 
 # 可能会遇到的问题
 - 链接错误导致的推流失败
