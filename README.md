@@ -33,3 +33,5 @@ bash <(wget -qO- -o- https://raw.githubusercontent.com/Nero-UMU/Bilibili-Live-Pu
     - 有可能是链接中的 "&" 符号导致的错误，尝试使用 Bash 运行此脚本
 - 读取目录错误
     - 有可能是文件中的空格导致的，不过理论上应该不会有这个问题
+- fontselect: failed to find any fallback with glyph 0x0 for font: (XXXXXX)
+    - 找不到字体，安装对应的字体即可 
