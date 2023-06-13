@@ -171,10 +171,18 @@ stream_anime() {
             for video in $(ls *.mkv || ls *.mp4); do
                 name=$(echo $video | sed -e 's/.mkv//g' -e 's/.mp4//g' -e 's/\[/\\\[/g' -e 's/\]/\\\]/g')
                 sub_name=$name".ass"
-                if [ $wantText = "yes" ]; then
-                    ffmpeg -re -i $video -shortest -vf subtitles=$sub_name,drawtext=fontcolor=$color:fontsize=$px:fontfile=$ttf:text="$text":x=$x:y=$y -preset ultrafast -c:v libx264 -g 60 -b:v 1000k -c:a aac -b:a 128k -strict -2 -crf 30 -f flv $rtmp
+                if [ -f "$sub_name" ]; then
+                    if [ $wantText = "yes" ]; then
+                        ffmpeg -re -i $video -shortest -vf subtitles=$sub_name,drawtext=fontcolor=$color:fontsize=$px:fontfile=$ttf:text="$text":x=$x:y=$y -preset ultrafast -c:v libx264 -g 60 -b:v 1000k -c:a aac -b:a 128k -strict -2 -crf 30 -f flv $rtmp
+                    else
+                        ffmpeg -re -i $video -shortest -vf subtitles=$sub_name -preset ultrafast -c:v libx264 -g 60 -b:v 3000k -c:a aac -b:a 128k -strict -2 -crf 30 -f flv $rtmp
+                    fi
                 else
-                    ffmpeg -re -i $video -shortest -vf subtitles=$sub_name -preset ultrafast -c:v libx264 -g 60 -b:v 3000k -c:a aac -b:a 128k -strict -2 -crf 30 -f flv $rtmp
+                    if [ $wantText = "yes" ]; then
+                        ffmpeg -re -i $video -shortest -vf drawtext=fontcolor=$color:fontsize=$px:fontfile=$ttf:text="$text":x=$x:y=$y -preset ultrafast -c:v libx264 -g 60 -b:v 1000k -c:a aac -b:a 128k -strict -2 -crf 30 -f flv $rtmp
+                    else
+                        ffmpeg -re -i $video -shortest -preset ultrafast -c:v libx264 -g 60 -b:v 3000k -c:a aac -b:a 128k -strict -2 -crf 30 -f flv $rtmp
+                    fi
                 fi
             done
         done
