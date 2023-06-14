@@ -1,4 +1,4 @@
-#!/bin/bash
+#/bin/bash
 
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
@@ -169,9 +169,10 @@ stream_anime() {
         while true; do
             cd $anime_path
             for video in $(ls *.mkv || ls *.mp4); do
-                name=$(echo $video | sed -e 's/.mkv//g' -e 's/.mp4//g' -e 's/\[/\\\[/g' -e 's/\]/\\\]/g')
-                sub_name=$name".ass"
+                name=$(echo $video | sed -e 's/.mkv//g' -e 's/.mp4//g' -e 's/\[/\\\[/g' -e 's/\]/\\\]/g') # find用
+                sub_name=$(find ./ -name "*.ass" | grep "$name")
                 if [ -f "$sub_name" ]; then
+                    sub_name=$(echo $sub_name | sed -e 's/\[/\\\[/g' -e 's/\]/\\\]/g')
                     if [ $wantText = "yes" ]; then
                         ffmpeg -re -i $video -shortest -vf subtitles=$sub_name,drawtext=fontcolor=$color:fontsize=$px:fontfile=$ttf:text="$text":x=$x:y=$y -preset ultrafast -c:v libx264 -g 60 -b:v 1000k -c:a aac -b:a 128k -strict -2 -crf 30 -f flv $rtmp
                     else
